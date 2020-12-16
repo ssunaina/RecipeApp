@@ -114,20 +114,33 @@ class _FilterScreenState extends State<FilterScreen> {
                 ),
                 SizedBox(
                   height: MediaQuery.of(context).size.height * .1,
-                  child: RaisedButton.icon(
-                    onPressed: () {
-                      final selectedFilters = {
-                        'gluten': _glutenFree,
-                        'lactose': _lactoseFree,
-                        'vegetarian': _vegetarian,
-                        'vegan': _vegan,
-                      };
-                      widget.saveFilters(selectedFilters);
-                      Navigator.of(context).pushNamed('/');
-                    },
-                    icon: Icon(Icons.save),
-                    color: Theme.of(context).accentColor,
-                    label: Text('Save Filters'),
+                  child: Row(
+                    children: <Widget>[
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * .3,
+                      ),
+                      FlatButton.icon(
+                        onPressed: () {
+                          final selectedFilters = {
+                            'gluten': _glutenFree,
+                            'lactose': _lactoseFree,
+                            'vegetarian': _vegetarian,
+                            'vegan': _vegan,
+                          };
+                          widget.saveFilters(selectedFilters);
+                          Navigator.of(context).pushNamed('/');
+                        },
+                        icon: Icon(Icons.save),
+                        color: Theme.of(context).accentColor,
+                        label: Text('Save Filters'),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * .3,
+                      ),
+                    ],
                   ),
                 ),
               ],

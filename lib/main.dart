@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:fourth_app/dummy_data.dart';
-import 'package:fourth_app/models/meal.dart';
-import 'package:fourth_app/screens/categories_meals_screen.dart';
-import 'package:fourth_app/screens/filters_screen.dart';
-import 'package:fourth_app/screens/meal_detail_screen.dart';
-import 'screens/tabs_screen.dart';
-import 'screens/meal_detail_screen.dart';
+
+import './dummy_data.dart';
+import './models/meal.dart';
+import './screens/categories_meals_screen.dart';
+import './screens/filters_screen.dart';
+import './screens/meal_detail_screen.dart';
+import './screens/tabs_screen.dart';
 
 void main() => runApp(MyApp());
 
@@ -23,6 +23,7 @@ class _MyAppState extends State<MyApp> {
   };
 
   List<Meal> _availableMeals = DUMMY_MEALS;
+  List<Meal> _favoriteMeals = [];
 
   void _setFilters(Map<String, bool> filterData) {
     setState(() {
@@ -44,6 +45,27 @@ class _MyAppState extends State<MyApp> {
         return true;
       }).toList();
     });
+  }
+
+  void _toggleFavorite(String mealId) {
+    final existingIndex =
+        _favoriteMeals.indexWhere((meal) => meal.id == mealId);
+    if (existingIndex >= 0) {
+      setState(() {
+        _favoriteMeals.removeAt(existingIndex);
+      });
+    } else {
+      setState(
+        () {
+          _favoriteMeals
+              .add(DUMMY_MEALS.firstWhere((meal) => meal.id == mealId));
+        },
+      );
+    }
+  }
+
+  bool _isMealFavorite(String id) {
+    return _favoriteMeals.any((meal) => meal.id == id);
   }
 
   @override
@@ -72,10 +94,11 @@ class _MyAppState extends State<MyApp> {
       ),
       // home: CategoriesScreen(),
       routes: {
-        '/': (ctx) => TabsScreen(),
+        '/': (ctx) => TabsScreen(_favoriteMeals),
         CategoryMealScreen.routeName: (ctx) =>
             CategoryMealScreen(_availableMeals),
-        MealDetailScreen.routeName: (ctx) => MealDetailScreen(),
+        MealDetailScreen.routeName: (ctx) =>
+            MealDetailScreen(_toggleFavorite, _isMealFavorite),
         FilterScreen.routeName: (ctx) => FilterScreen(_filters, _setFilters),
       },
     );
